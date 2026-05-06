@@ -4,7 +4,7 @@
 '''
 
 # Import Flask, render_template, request from the flask pramework package
-from flask import Flask, render_template, request
+from flask import Flask, request
 
 # Import the emotion_detector function from the package
 from EmotionDetection.emotion_detection import emotion_detector
@@ -16,7 +16,16 @@ app = Flask("Emotion Detector")
 #Flask deorator
 @app.route("/emotionDetector")
 def sent_dectector():
-    #Retrieve the text to analyze from the request arguments
+    """
+    Route to analyze the emotional content of input text.
+
+    Retrieves text from the query parameter 'textToAnalyze',
+    passes it to the emotion_detector function, and returns
+    a formatted string with emotion scores and dominant emotion.
+
+    Returns:
+       str: Formatted emotion analysis result.
+    """
     text_to_analyze = request.args.get('textToAnalyze')
     print("TEXT:", text_to_analyze)
 
@@ -48,3 +57,4 @@ def sent_dectector():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+    
