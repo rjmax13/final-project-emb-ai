@@ -14,30 +14,50 @@ def emotion_detector(text_to_analyze):
     # Make a POST request to the API with the payload and headers
     response = requests.post(url, json = myobj, headers=headers)
 
-    # Convert response text to JSON
-    formatted_response = json.loads(response.text)
+    #ERROR HANDLING
+    # If the response status code is 200, extract the scores and dominant emotion
+    if response.status_code == 200:
 
-    # Extract emotion scores
-    emotions = formatted_response["emotionPredictions"][0]["emotion"]
 
-    anger = emotions["anger"]
-    disgust = emotions["disgust"]
-    fear = emotions["fear"]
-    joy = emotions["joy"]
-    sadness = emotions["sadness"]
+        # Convert response text to JSON
+        formatted_response = json.loads(response.text)
 
-    # Determine dominant emotion
-    emotion_scores = {
-        "anger": anger,
-        "disgust": disgust,
-        "fear": fear,
-        "joy": joy,
-        "sadness": sadness
-    }
+        # Extract emotion scores
+        emotions = formatted_response["emotionPredictions"][0]["emotion"]
 
-    dominant_emotion = max(emotion_scores, key=emotion_scores.get)
+        anger = emotions["anger"]
+        disgust = emotions["disgust"]
+        fear = emotions["fear"]
+        joy = emotions["joy"]
+        sadness = emotions["sadness"]
 
-    # Return structured output
+        # Determine dominant emotion
+        emotion_scores = {
+            "anger": anger,
+            "disgust": disgust,
+            "fear": fear,
+            "joy": joy,
+            "sadness": sadness
+        }
+
+        dominant_emotion = max(emotion_scores, key=emotion_scores.get)
+
+    elif response.status_code == 400:
+        anger = None
+        disgust = None
+        fear = None
+        joy = None
+        sadness = None
+        dominant_emotion = None
+
+    else:
+        anger = None
+        disgust = None
+        fear = None
+        joy = None
+        sadness = None
+        dominant_emotion = None
+
     return {
         "anger": anger,
         "disgust": disgust,
@@ -46,7 +66,3 @@ def emotion_detector(text_to_analyze):
         "sadness": sadness,
         "dominant_emotion": dominant_emotion
     }
-
-
-
-    return response.text
